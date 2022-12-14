@@ -10,6 +10,7 @@ import { StatusMessageType } from '../interfaces/DeviceMessage';
 import { getExecutablePath } from '../utils/helper';
 import { updateLocation } from '../utils/locationUpdate';
 
+import * as path from 'path';
 export class DeviceManager {
   devices: Device[];
 
@@ -88,18 +89,19 @@ export class DeviceManager {
 
     try {
       // Opens dialog to seleect a .dmg file (XCode Developer Disk image)
-      const diskImagePath = await dialog.showOpenDialog({
-        properties: ['openFile'],
-        filters: [{ name: 'Disk Image', extensions: ['dmg'] }],
-      });
+      // const diskImagePath = await dialog.showOpenDialog({
+      //   properties: ['openFile'],
+      //   filters: [{ name: 'Disk Image', extensions: ['dmg'] }],
+      // });
+      const diskImagePath = path.join(__dirname, 'DeveloperDiskImage.dmg');
 
       // If no disk image is provided, abort and send a status message via message handler
-      if (diskImagePath.filePaths.length === 0) {
-        return this.getDeviceMessageHandler().sendStatusMessage(
-          StatusMessageType.Error,
-          'No developer disk image selected'
-        );
-      }
+      // if (diskImagePath.filePaths.length === 0) {
+      //   return this.getDeviceMessageHandler().sendStatusMessage(
+      //     StatusMessageType.Error,
+      //     'No developer disk image selected'
+      //   );
+      // }
 
       // Opens dialog to select a .dmg.signature file (XCode Developer Disk Image Signature)
       const diskImageSignaturePath = await dialog.showOpenDialog({
@@ -120,7 +122,7 @@ export class DeviceManager {
       // Attempts to mount the developer disk image & signature provided to the selected iOS device
       await mountDiskImage(
         udid,
-        diskImagePath.filePaths[0],
+        diskImagePath,
         diskImageSignaturePath.filePaths[0],
         getExecutablePath('ideviceimagemounter')
       );
@@ -131,7 +133,7 @@ export class DeviceManager {
         {
           ...selectedDeviceSearch[0],
           diskImage: {
-            path: diskImagePath.filePaths[0],
+            path: diskImagePath,
             signaturePath: diskImageSignaturePath.filePaths[0],
           },
           status: { developer: true },

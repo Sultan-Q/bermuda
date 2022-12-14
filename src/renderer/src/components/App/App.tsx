@@ -10,8 +10,8 @@ import './App.css';
 
 const App = () => {
   const [location, setLocation] = useState<LatLngLiteral>({
-    lat: 40.72144,
-    lng: -74.00031,
+    lat: 38.878544,
+    lng: -77.22932,
   });
 
   useStatusMessages();

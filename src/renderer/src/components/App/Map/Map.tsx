@@ -25,7 +25,7 @@ const Map = ({ location, setLocation }: MapProps) => {
   const icon = divIcon({
     className: 'map-marker-icon',
     html: renderToString(
-      <FontAwesomeIcon icon={faMapMarkerAlt} size='2x' color='white' />
+      <FontAwesomeIcon icon={faMapMarkerAlt} size='2x' color='red' />
     ),
   });
 
@@ -55,7 +55,7 @@ const Map = ({ location, setLocation }: MapProps) => {
       zoomControl={false}
       attributionControl={false}
     >
-      <TileLayer url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png' />
+      <TileLayer url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png' />
       <Marker
         ref={markerRef}
         draggable
