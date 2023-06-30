@@ -6,6 +6,7 @@ export interface DeviceMessage {
 export interface DeviceMessagePayload {
   udid: string;
   location?: string;
+  version: string;
 }
 
 export enum DeviceMessageType {

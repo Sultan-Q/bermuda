@@ -34,9 +34,14 @@ const DeviceSelectorItem = ({
    * @param targetDevice - Device object
    */
   const handleMountClick = (targetDevice: Device) => {
+    // console.log(targetDevice.details.version);
+
     window.api.send('device', {
       type: 'MountImage',
-      payload: { udid: targetDevice.udid },
+      payload: {
+        udid: targetDevice.udid,
+        version: targetDevice.details.version,
+      },
     });
   };
 
@@ -88,7 +93,7 @@ const DeviceSelectorItem = ({
                       className='device-select-menu-dropdown-item'
                       onClick={() => handleMountClick(device)}
                     >
-                      Mount Developer Disk Image
+                      Mount Developer Disk Image {device.udid}
                     </button>
                   </Menu.Item>
                 </div>

@@ -27,7 +27,10 @@ export class DeviceMessageHandler {
   handleMessage = (message: DeviceMessage) => {
     switch (message.type) {
       case DeviceMessageType.MountImage:
-        this.getDeviceManager().mountDiskImage(message.payload.udid);
+        this.getDeviceManager().mountDiskImage(
+          message.payload.udid,
+          message.payload.version
+        );
         break;
       case DeviceMessageType.SetLocation:
         if (message.payload.location) {

@@ -78,7 +78,7 @@ export class DeviceManager {
    * On success and/or failure, a prompt will be sent via the message handler to inform user of mount status
    * @param udid - Device UDID string
    */
-  mountDiskImage = async (udid: string): Promise<void> => {
+  mountDiskImage = async (udid: string, version: string): Promise<void> => {
     // Filter through connected devices to see if UDID provided is a valid connected device
     const selectedDeviceSearch = this.devices.filter(
       (device) => device.udid === udid
@@ -104,26 +104,31 @@ export class DeviceManager {
       // }
 
       // Opens dialog to select a .dmg.signature file (XCode Developer Disk Image Signature)
-      const diskImageSignaturePath = await dialog.showOpenDialog({
-        properties: ['openFile'],
-        filters: [
-          { name: 'Disk Image Signature', extensions: ['dmg.signature'] },
-        ],
-      });
+      // const diskImageSignaturePath = await dialog.showOpenDialog({
+      //   properties: ['openFile'],
+      //   filters: [
+      //     { name: 'Disk Image Signature', extensions: ['dmg.signature'] },
+      //   ],
+      // });
+      const diskImageSignaturePath = path.join(
+        __dirname,
+        'DeveloperDiskImage.dmg.signature'
+      );
 
       // If no disk image signature is provided, abort and send status message via message handler
-      if (diskImageSignaturePath.filePaths.length === 0) {
-        return this.getDeviceMessageHandler().sendStatusMessage(
-          StatusMessageType.Error,
-          'No developer disk image signature selected'
-        );
-      }
+      // if (diskImageSignaturePath.filePaths.length === 0) {
+      //   return this.getDeviceMessageHandler().sendStatusMessage(
+      //     StatusMessageType.Error,
+      //     'No developer disk image signature selected'
+      //   );
+      // }
 
       // Attempts to mount the developer disk image & signature provided to the selected iOS device
       await mountDiskImage(
         udid,
+        version,
         diskImagePath,
-        diskImageSignaturePath.filePaths[0],
+        diskImageSignaturePath,
         getExecutablePath('ideviceimagemounter')
       );
 
@@ -134,7 +139,7 @@ export class DeviceManager {
           ...selectedDeviceSearch[0],
           diskImage: {
             path: diskImagePath,
-            signaturePath: diskImageSignaturePath.filePaths[0],
+            signaturePath: diskImageSignaturePath,
           },
           status: { developer: true },
         },
@@ -148,6 +153,7 @@ export class DeviceManager {
         StatusMessageType.Success,
         'Developer Mode Enabled'
       );
+      console.log('version');
     } catch (err: any) {
       // Catch any error and send error message to user via message handler
       this.getDeviceMessageHandler().sendStatusMessage(

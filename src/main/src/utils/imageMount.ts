@@ -11,6 +11,7 @@ import { spawn } from 'child_process';
  */
 export const mountDiskImage = async (
   deviceUDID: string,
+  deviceVersion: string,
   diskImagePath: string,
   diskImageSignaturePath: string,
   executablePath: string
@@ -20,6 +21,7 @@ export const mountDiskImage = async (
     const child = spawn(executablePath, [
       '-u',
       deviceUDID,
+      deviceVersion,
       diskImagePath,
       diskImageSignaturePath,
     ]);
@@ -42,6 +44,7 @@ export const mountDiskImage = async (
       // Reject with the output from stderr
       return reject(chunk.toString());
     }
+    console.log(deviceVersion);
 
     // Fail through case where something really weird must have happened
     return reject(false);
